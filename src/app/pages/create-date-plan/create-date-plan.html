@@ -1,72 +1,180 @@
-<mat-card class="plan-card">
-  <div class="header">
-    <h1>Create Date Plan</h1>
-    <p>Capture your next idea and keep it organized in BowerBox.</p>
-  </div>
-
-  <form [formGroup]="datePlanForm" (ngSubmit)="createDatePlan()" class="date-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Title</mat-label>
-      <input matInput formControlName="title" maxlength="80" placeholder="Rooftop dinner" />
-      @if (datePlanForm.controls.title.hasError('required')) {
-        <mat-error>Title is required.</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <textarea
-        matInput
-        formControlName="description"
-        rows="3"
-        maxlength="500"
-        placeholder="What makes this date special?"
-      ></textarea>
-      @if (datePlanForm.controls.description.hasError('required')) {
-        <mat-error>Description is required.</mat-error>
-      }
-    </mat-form-field>
-
-    <div class="two-column">
-      <mat-form-field appearance="outline">
-        <mat-label>Date & time</mat-label>
-        <input matInput type="datetime-local" formControlName="dateTime" />
-        @if (datePlanForm.controls.dateTime.hasError('required')) {
-          <mat-error>Date and time are required.</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Location</mat-label>
-        <input matInput formControlName="location" placeholder="City Botanical Garden" />
-        @if (datePlanForm.controls.location.hasError('required')) {
-          <mat-error>Location is required.</mat-error>
-        }
-      </mat-form-field>
-    </div>
-
-    <div class="two-column">
-      <mat-form-field appearance="outline">
-        <mat-label>Partner name (optional)</mat-label>
-        <input matInput formControlName="partnerName" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Budget (optional)</mat-label>
-        <input matInput type="number" min="0" formControlName="budget" />
-      </mat-form-field>
-    </div>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Notes (optional)</mat-label>
-      <textarea matInput formControlName="notes" rows="3" maxlength="500"></textarea>
-    </mat-form-field>
-
-    <div class="actions">
-      <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting()">
-        <mat-icon>save</mat-icon>
-        Save date plan
-      </button>
-    </div>
-  </form>
-</mat-card>
+<section class="plan-page" [class.plan-page--dialog]="isDialogMode()">
+  <div class="plan-layout" [class.plan-layout--dialog]="isDialogMode()">
+    <mat-card class="plan-card">
+      <div class="header">
+        <div class="header-copy">
+          <h1>{{ pageTitle() }}</h1>
+          <p>
+            @if (isEditMode()) {
+              Update any details below, then save your changes.
+            } @else {
+              All fields are optional — fill in what you know, then save when at least one field has a value.
+            }
+          </p>
+        </div>
+        @if (isDialogMode()) {
+          <button mat-icon-button type="button" aria-label="Close editor" (click)="cancelEdit()">
+            <app-icon name="close" size="sm" />
+          </button>
+        }
+      </div>
+
+      @if (!isEditMode() && formUpdatedByAi()) {
+        <p class="ai-hint">Form updated from chat. Review the fields, then click Save.</p>
+      }
+
+      @if (!isEditMode() && formConfig().usesLuckyDiscount) {
+        @if (luckyDiscountPercent() > 0) {
+          <div class="lucky-banner">
+            <div>
+              <strong>Lucky discount active: {{ luckyDiscountPercent() }}%</strong>
+              <p>That percent is the amount you do not pay on the restaurant or activity bill.</p>
+            </div>
+            @if ((datePlanForm.controls.budget.value ?? 0) > 0) {
+              <div class="lucky-savings">
+                <span>You save ${{ billBreakdown().savings | number: '1.0-2' }}</span>
+                <span>You pay ${{ billBreakdown().youPay | number: '1.0-2' }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="lucky-hint">
+            Play <a routerLink="/lucky-games">lucky games</a> to earn a bill discount for this date.
+          </p>
+        }
+      }
+
+      @if (!isEditMode() && formConfig().usesRewardsProgram) {
+        <div class="rewards-banner">
+          <div>
+            <strong>BowerBird Rewards: {{ availableRewardsPoints() }} points</strong>
+            <p>Married couples earn points instead of bill discounts. Redeem for cash, dining, or experiences.</p>
+          </div>
+          <div class="rewards-value">
+            <span>Worth about ${{ rewardsValue() | number: '1.0-2' }}</span>
+            <a routerLink="/lucky-games">Earn more points</a>
+          </div>
+        </div>
+      }
+
+      <form [formGroup]="datePlanForm" (ngSubmit)="createDatePlan()" class="date-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Relationship (optional)</mat-label>
+          <mat-select
+            formControlName="relationshipType"
+            (selectionChange)="onRelationshipChange($event.value)"
+          >
+            @for (option of relationshipOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Title (optional)</mat-label>
+          <input matInput formControlName="title" maxlength="80" placeholder="Rooftop dinner" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description (optional)</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="3"
+            maxlength="500"
+            placeholder="What makes this date special?"
+          ></textarea>
+        </mat-form-field>
+
+        <div class="two-column">
+          <mat-form-field appearance="outline">
+            <mat-label>Date (optional)</mat-label>
+            <input
+              matInput
+              [matDatepicker]="datePicker"
+              formControlName="date"
+              [min]="minDate"
+              placeholder="Choose date"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker" />
+            <mat-datepicker #datePicker />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Time (optional)</mat-label>
+            <mat-select formControlName="time">
+              <mat-option value="">Select time</mat-option>
+              @for (option of timeOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City or ZIP code (optional)</mat-label>
+          <input matInput formControlName="location" placeholder="Malibu or 90265" maxlength="120" />
+          <mat-hint>Use a city name or 5-digit US ZIP code</mat-hint>
+          @if (datePlanForm.controls.location.hasError('cityOrZip')) {
+            <mat-error>Enter a valid city name or ZIP code.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="two-column" [class.single-column]="!formConfig().showBudget">
+          @if (formConfig().showPartnerName) {
+            <mat-form-field appearance="outline">
+              <mat-label>{{ formConfig().partnerNameLabel }} (optional)</mat-label>
+              <input matInput formControlName="partnerName" />
+            </mat-form-field>
+          }
+
+          @if (formConfig().showBudget) {
+            <mat-form-field appearance="outline">
+              <mat-label>Budget (optional)</mat-label>
+              <input matInput type="number" min="0" formControlName="budget" />
+            </mat-form-field>
+          }
+        </div>
+
+        @if (formConfig().usesRewardsProgram && !isEditMode()) {
+          <mat-form-field appearance="outline">
+            <mat-label>Redeem rewards (optional)</mat-label>
+            <mat-select formControlName="rewardsRedemptionType">
+              <mat-option [value]="null">No redemption for this date</mat-option>
+              @for (option of redemptionOptions; track option.type) {
+                <mat-option [value]="option.type" [disabled]="!canRedeemOption(option.pointsCost)">
+                  {{ option.label }} — {{ option.valueLabel }} ({{ option.pointsCost }} pts)
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+        <mat-form-field appearance="outline">
+          <mat-label>Notes (optional)</mat-label>
+          <textarea matInput formControlName="notes" rows="3" maxlength="500"></textarea>
+        </mat-form-field>
+
+        <div class="actions">
+          @if (isEditMode()) {
+            <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+          }
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="!canSave() || isSubmitting()"
+          >
+            <app-icon name="save" size="sm" />
+            {{ saveLabel() }}
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+    @if (!isDialogMode() && !isEditMode()) {
+      <app-ai-chat-panel />
+    }
+  </div>
+</section>
+

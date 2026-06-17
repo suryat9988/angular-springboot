@@ -1,63 +1,130 @@
 <section class="page-header">
   <div>
     <h1>Upcoming Dates</h1>
-    <p>Your confirmed plans are listed in chronological order.</p>
+    <p>Your saved date plans appear here. PDFs load from cloud storage when available.</p>
   </div>
   <a mat-flat-button color="primary" routerLink="/create-date-plan">
-    <mat-icon>add</mat-icon>
+    <app-icon name="add" size="sm" />
     New date plan
   </a>
 </section>
 
-@if (upcomingDatePlans$ | async; as datePlans) {
-  @if (datePlans.length === 0) {
-    <mat-card class="empty-state">
-      <mat-icon>event_busy</mat-icon>
-      <h2>No upcoming dates yet</h2>
-      <p>Create your first date plan to see it here.</p>
-      <a mat-stroked-button routerLink="/create-date-plan">Create a plan</a>
-    </mat-card>
-  } @else {
-    <section class="dates-grid">
-      @for (datePlan of datePlans; track trackById($index, datePlan)) {
-        <mat-card class="date-card">
-          <div class="card-header">
-            <h2>{{ datePlan.title }}</h2>
-            <span class="chip">{{ countdownLabel(datePlan.dateTime) }}</span>
-          </div>
+@let records = storedRecords();
 
-          <p class="description">{{ datePlan.description }}</p>
-
-          <div class="meta">
-            <div>
-              <mat-icon>schedule</mat-icon>
-              <span>{{ datePlan.dateTime | date: 'EEE, MMM d, y • h:mm a' }}</span>
-            </div>
-            <div>
-              <mat-icon>location_on</mat-icon>
-              <span>{{ datePlan.location }}</span>
-            </div>
-            @if (datePlan.partnerName) {
-              <div>
-                <mat-icon>favorite</mat-icon>
-                <span>With {{ datePlan.partnerName }}</span>
+@if (records.length === 0) {
+  <mat-card class="empty-state">
+    <app-icon name="empty-dates" size="lg" />
+    <h2>No upcoming dates yet</h2>
+    <p>Create a date plan and it will show up here right after you save.</p>
+    <a mat-stroked-button routerLink="/create-date-plan">Create a plan</a>
+  </mat-card>
+} @else {
+  @if (selectedFromList(records); as selected) {
+    <section class="dates-layout">
+      <div class="dates-list">
+        @for (record of records; track trackById($index, record)) {
+          <mat-card
+            class="date-card"
+            [class.selected]="isSelected(record)"
+            (click)="selectPlan(record)"
+          >
+            <div class="card-header">
+              <h2>{{ record.plan.title }}</h2>
+              <div class="card-header-actions">
+                <button
+                  mat-icon-button
+                  type="button"
+                  aria-label="Edit date plan"
+                  (click)="openEditDialog(record, $event)"
+                >
+                  <app-icon name="create-plan" size="sm" />
+                </button>
+                <span class="chip">{{ countdownLabel(record.plan.dateTime) }}</span>
               </div>
-            }
-            @if (datePlan.budget !== undefined && datePlan.budget !== null) {
+            </div>
+
+            <p class="description">{{ record.plan.description }}</p>
+
+            <div class="meta">
               <div>
-                <mat-icon>payments</mat-icon>
-                <span>Budget: ${{ datePlan.budget | number: '1.0-2' }}</span>
+                <app-icon name="schedule" size="sm" />
+                <span>{{ record.plan.dateTime | date: 'EEE, MMM d, y • h:mm a' }}</span>
               </div>
+              <div>
+                <app-icon name="location" size="sm" />
+                <span>{{ record.plan.location }}</span>
+              </div>
+              <div>
+                <app-icon name="welcome" size="sm" />
+                <span>{{ relationshipLabel(record.plan.relationshipType) }}</span>
+              </div>
+              @if (record.plan.partnerName) {
+                <div>
+                  <app-icon name="welcome" size="sm" />
+                  <span>With {{ record.plan.partnerName }}</span>
+                </div>
+              }
+            </div>
+
+            @if (record.pdfUrl) {
+              <a
+                class="pdf-link"
+                [href]="record.pdfUrl"
+                target="_blank"
+                rel="noopener"
+                (click)="$event.stopPropagation()"
+              >
+                Open PDF in new tab
+              </a>
+            }
+          </mat-card>
+        }
+      </div>
+
+      <mat-card class="pdf-panel">
+        <div class="pdf-panel-header">
+          <div>
+            <h2>{{ selected.plan.title }}</h2>
+            <p>{{ selected.pdfUrl ? 'Loaded from Google Cloud Storage' : 'Saved to your account' }}</p>
+          </div>
+          <div class="pdf-panel-actions">
+            <button mat-stroked-button type="button" (click)="openEditDialog(selected)">
+              <app-icon name="create-plan" size="sm" />
+              Edit plan
+            </button>
+            @if (selected.pdfUrl) {
+              <a mat-stroked-button [href]="selected.pdfUrl" target="_blank" rel="noopener">
+                Download PDF
+              </a>
             }
           </div>
+        </div>
 
-          @if (datePlan.notes) {
-            <p class="notes">
-              {{ datePlan.notes }}
-            </p>
-          }
-        </mat-card>
-      }
+        @if (selected.pdfUrl) {
+          <iframe
+            class="pdf-viewer"
+            [src]="pdfViewerUrl(selected.pdfUrl)"
+            [title]="selected.plan.title + ' PDF'"
+          ></iframe>
+        } @else {
+          <div class="plan-detail">
+            <p class="description">{{ selected.plan.description }}</p>
+            <div class="meta">
+              <div>
+                <app-icon name="schedule" size="sm" />
+                <span>{{ selected.plan.dateTime | date: 'EEE, MMM d, y • h:mm a' }}</span>
+              </div>
+              <div>
+                <app-icon name="location" size="sm" />
+                <span>{{ selected.plan.location }}</span>
+              </div>
+              @if (selected.plan.notes) {
+                <p class="notes">{{ selected.plan.notes }}</p>
+              }
+            </div>
+          </div>
+        }
+      </mat-card>
     </section>
   }
 }

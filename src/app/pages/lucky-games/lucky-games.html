@@ -1,0 +1,201 @@
+<section class="lucky-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">{{ usesRewardsProgram() ? 'Married couple rewards' : 'Play games to get lucky' }}</p>
+      <h1>{{ usesRewardsProgram() ? 'BowerBird Rewards' : 'Lucky date games' }}</h1>
+      <p>
+        @if (usesRewardsProgram()) {
+          Play mini games to earn points. Redeem points for cash, dining credits, or experience gifts.
+        } @else {
+          Your average game score becomes the percent you do not pay on the date bill.
+        }
+      </p>
+    </div>
+    <div class="lucky-score" [class.rewards-score]="usesRewardsProgram()">
+      @if (usesRewardsProgram()) {
+        <span class="score-value">{{ availablePoints() }}</span>
+        <small>rewards points available</small>
+      } @else {
+        <span class="score-value">{{ luckyDiscountPercent() }}%</span>
+        <small>current lucky discount</small>
+      }
+    </div>
+  </header>
+
+  <div class="games-grid">
+    @for (game of games; track game.id) {
+      <mat-card class="game-card">
+        <app-icon [name]="game.icon" size="lg" />
+        <h2>{{ game.title }}</h2>
+        <p>{{ game.description }}</p>
+        @if (scoreFor(game.id); as score) {
+          <span class="score-pill">Played: {{ score }}{{ usesRewardsProgram() ? ' pts' : '%' }}</span>
+        } @else {
+          <span class="score-pill pending">Not played yet</span>
+        }
+        <button mat-stroked-button type="button" (click)="openGame(game.id)">Play</button>
+      </mat-card>
+    }
+  </div>
+
+  @if (usesRewardsProgram()) {
+    <mat-card class="bill-card rewards-card">
+      <h2>Redeem your rewards</h2>
+      <p>You have {{ availablePoints() }} points (about ${{ rewardsValue() | number: '1.0-2' }} in value).</p>
+      <div class="redeem-grid">
+        @for (option of redemptionOptions; track option.type) {
+          <div class="redeem-option">
+            <div>
+              <strong>{{ option.label }}</strong>
+              <p>{{ option.valueLabel }} • {{ option.pointsCost }} points</p>
+            </div>
+            <button
+              mat-stroked-button
+              type="button"
+              [disabled]="!canRedeem(option.pointsCost)"
+              (click)="redeemReward(option.type)"
+            >
+              Redeem
+            </button>
+          </div>
+        }
+      </div>
+      @if (redeemed().length > 0) {
+        <div class="redeemed-list">
+          <h3>Recent redemptions</h3>
+          @for (item of redeemed(); track item.redeemedAt) {
+            <p>{{ item.label }} — {{ item.points }} points</p>
+          }
+        </div>
+      }
+      @if (allGamesPlayed()) {
+        <a mat-flat-button color="primary" routerLink="/create-date-plan">Apply rewards to a date plan</a>
+      }
+    </mat-card>
+  } @else {
+    <mat-card class="bill-card">
+      <h2>See your date savings</h2>
+      <p>If your lucky score is {{ luckyDiscountPercent() }}%, that is the portion of the bill you skip paying.</p>
+      <mat-form-field appearance="outline" class="bill-field">
+        <mat-label>Estimated date bill</mat-label>
+        <input matInput type="number" min="0" [ngModel]="sampleBill()" (ngModelChange)="sampleBill.set(+$event || 0)" />
+      </mat-form-field>
+      <div class="bill-breakdown">
+        <div><span>Bill total</span><strong>${{ sampleBill() | number: '1.0-2' }}</strong></div>
+        <div><span>You save</span><strong class="save">${{ billBreakdown().savings | number: '1.0-2' }}</strong></div>
+        <div><span>You pay</span><strong>${{ billBreakdown().youPay | number: '1.0-2' }}</strong></div>
+      </div>
+      @if (allGamesPlayed()) {
+        <a mat-flat-button color="primary" routerLink="/create-date-plan">Use lucky discount on date plan</a>
+      }
+    </mat-card>
+  }
+
+  @if (gameMessage()) {
+    <p class="game-message">{{ gameMessage() }}</p>
+  }
+
+  <button mat-button type="button" (click)="resetAllProgress()">
+    Reset {{ usesRewardsProgram() ? 'rewards' : 'lucky scores' }}
+  </button>
+</section>
+
+@if (activeGame(); as gameId) {
+  <div class="game-modal" role="dialog" aria-modal="true">
+    <mat-card class="modal-card">
+      <div class="modal-header">
+        <h2>{{ activeGameTitle() }}</h2>
+        <button mat-icon-button type="button" aria-label="Close game" (click)="closeGame()">
+          <app-icon name="close" size="sm" />
+        </button>
+      </div>
+
+      @switch (gameId) {
+        @case ('heart-catch') {
+          <p>Tap hearts in 12 seconds. More catches = higher lucky score.</p>
+          <div class="heart-arena">
+            @for (heart of hearts(); track heart.id) {
+              <button
+                type="button"
+                class="falling-heart"
+                [style.left.%]="heart.left"
+                (click)="catchHeart(heart.id)"
+              >
+                ❤️
+              </button>
+            }
+          </div>
+          <p class="mini-stats">Caught: {{ heartsCaught() }}</p>
+          @if (!heartGameRunning()) {
+            <button mat-flat-button color="primary" type="button" (click)="startHeartGame()">Start</button>
+          }
+        }
+
+        @case ('math-blitz') {
+          @if (!mathRunning()) {
+            <p>Answer 5 fast math problems.</p>
+            <button mat-flat-button color="primary" type="button" (click)="startMathGame()">Start</button>
+          } @else {
+            <p class="math-progress">Question {{ mathIndex() + 1 }} / {{ mathQuestions().length }}</p>
+            <div class="math-prompt">{{ mathQuestions()[mathIndex()].prompt }}</div>
+            <mat-form-field appearance="outline" class="math-field">
+              <mat-label>Answer</mat-label>
+              <input
+                matInput
+                type="number"
+                [ngModel]="mathAnswer()"
+                (ngModelChange)="mathAnswer.set($event)"
+                (keyup.enter)="submitMathAnswer()"
+              />
+            </mat-form-field>
+            <button mat-flat-button color="primary" type="button" (click)="submitMathAnswer()">Submit</button>
+          }
+        }
+
+        @case ('memory-match') {
+          @if (!memoryRunning()) {
+            <p>Match all bird pairs. Fewer moves means a higher score.</p>
+            <button mat-flat-button color="primary" type="button" (click)="startMemoryGame()">Start</button>
+          } @else {
+            <p class="mini-stats">Moves: {{ memoryMoves() }}</p>
+            <div class="memory-grid">
+              @for (card of memoryCards(); track card.id) {
+                <button
+                  type="button"
+                  class="memory-card"
+                  [class.flipped]="card.flipped || card.matched"
+                  [class.matched]="card.matched"
+                  (click)="flipCard(card.id)"
+                >
+                  @if (card.flipped || card.matched) {
+                    {{ card.emoji }}
+                  } @else {
+                    ?
+                  }
+                </button>
+              }
+            </div>
+          }
+        }
+
+        @case ('lucky-dice') {
+          <p>Roll two dice three times. Higher rolls boost your lucky score.</p>
+          <div class="dice-row">
+            <span class="die">{{ diceValues()[0] }}</span>
+            <span class="die">{{ diceValues()[1] }}</span>
+          </div>
+          <p class="mini-stats">Rolls: {{ diceRolls().length }} / 3</p>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            [disabled]="diceRolling() || diceRolls().length >= 3"
+            (click)="rollDice()"
+          >
+            {{ diceRolling() ? 'Rolling...' : 'Roll dice' }}
+          </button>
+        }
+      }
+    </mat-card>
+  </div>
+}

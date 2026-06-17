@@ -1,0 +1,209 @@
+<section class="puzzle-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Breakup date planner</p>
+      <h1>Puzzle challenge</h1>
+      <p>Complete all four puzzles to unlock your breakup date plan.</p>
+    </div>
+    <span class="progress-chip">{{ completedLevels().size }} / {{ levels.length }} complete</span>
+  </header>
+
+  <div class="level-tabs">
+    @for (level of levels; track level.id) {
+      <button
+        type="button"
+        class="level-tab"
+        [class.active]="activeLevel() === level.id"
+        [class.complete]="isLevelComplete(level.id)"
+        [class.locked]="isLevelLocked(level.id)"
+        [disabled]="isLevelLocked(level.id)"
+        (click)="selectLevel(level.id)"
+      >
+        <span class="level-order">{{ level.order }}</span>
+        <span class="level-copy">
+          <strong>{{ level.title }}</strong>
+          <small>{{ level.subtitle }}</small>
+        </span>
+      </button>
+    }
+  </div>
+
+  <mat-card class="puzzle-card">
+    <h2>{{ activeLevelMeta().title }}: {{ activeLevelMeta().subtitle }}</h2>
+
+    @switch (activeLevel()) {
+      @case ('very-easy') {
+        <p class="instructions">Fill the 4x4 grid so each row, column, and 2x2 box contains 1-4.</p>
+        <div class="sudoku-grid">
+          @for (row of [0, 1, 2, 3]; track row) {
+            @for (col of [0, 1, 2, 3]; track col) {
+              <input
+                class="sudoku-cell"
+                type="number"
+                min="1"
+                max="4"
+                [readonly]="isSudokuClue(row, col)"
+                [value]="getSudokuValue(row, col) || ''"
+                (input)="setSudokuValue(row, col, $any($event.target).value)"
+              />
+            }
+          }
+        </div>
+        <button mat-flat-button color="primary" type="button" (click)="checkSudoku()">Check Sudoku</button>
+      }
+
+      @case ('easy') {
+        <p class="instructions">Solve this quick math problem.</p>
+        <div class="math-prompt">{{ mathPuzzle.prompt }}</div>
+        <mat-form-field appearance="outline" class="math-field">
+          <mat-label>Your answer</mat-label>
+          <input matInput type="number" [ngModel]="mathAnswer()" (ngModelChange)="mathAnswer.set($event)" />
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="button" (click)="checkMath()">Check answer</button>
+      }
+
+      @case ('medium') {
+        <p class="instructions">{{ chessPuzzle.prompt }}</p>
+        <p class="chess-note">{{ chessPuzzle.fenDescription }}</p>
+        <div class="chess-board">
+          @for (rowIndex of [0, 1, 2, 3, 4, 5, 6, 7]; track rowIndex) {
+            @for (colIndex of [0, 1, 2, 3, 4, 5, 6, 7]; track colIndex) {
+              <div class="chess-square" [class.dark]="(rowIndex + colIndex) % 2 === 1">
+                {{ pieceSymbol(chessPuzzle.board[rowIndex][colIndex]) }}
+              </div>
+            }
+          }
+        </div>
+        <mat-radio-group
+          class="chess-options"
+          [ngModel]="selectedChessMove()"
+          (ngModelChange)="selectedChessMove.set($event)"
+        >
+          @for (option of chessPuzzle.options; track option.notation) {
+            <mat-radio-button [value]="option.notation">{{ option.label }}</mat-radio-button>
+          }
+        </mat-radio-group>
+        <button mat-flat-button color="primary" type="button" (click)="checkChess()">Check chess move</button>
+      }
+
+      @case ('hard') {
+        <p class="instructions">Pick a color, then tap each region of the Malibu diagram to paint it.</p>
+        <div class="color-palette">
+          @for (color of palette; track color) {
+            <button
+              type="button"
+              class="swatch"
+              [style.background]="color"
+              [class.selected]="selectedColor() === color"
+              (click)="selectedColor.set(color)"
+              [attr.aria-label]="'Select color ' + color"
+            ></button>
+          }
+        </div>
+        <div class="coloring-scene">
+          <svg viewBox="0 0 640 400" class="coloring-svg" aria-label="Malibu coloring diagram">
+            <rect
+              id="sky"
+              x="0"
+              y="0"
+              width="640"
+              height="220"
+              [attr.fill]="getRegionColor('sky')"
+              (click)="colorRegion('sky')"
+            />
+            <circle
+              id="sun"
+              cx="520"
+              cy="72"
+              r="34"
+              [attr.fill]="getRegionColor('sun')"
+              (click)="colorRegion('sun')"
+            />
+            <ellipse
+              id="clouds"
+              cx="180"
+              cy="88"
+              rx="120"
+              ry="28"
+              [attr.fill]="getRegionColor('clouds')"
+              (click)="colorRegion('clouds')"
+            />
+            <path
+              id="ocean"
+              d="M0 220 C120 200 220 250 340 230 C460 210 540 250 640 230 L640 400 L0 400 Z"
+              [attr.fill]="getRegionColor('ocean')"
+              (click)="colorRegion('ocean')"
+            />
+            <path
+              id="mountain"
+              d="M0 220 C90 180 170 250 280 215 C390 180 470 235 640 205 L640 250 L0 250 Z"
+              [attr.fill]="getRegionColor('mountain')"
+              (click)="colorRegion('mountain')"
+            />
+            <rect
+              id="villa"
+              x="210"
+              y="175"
+              width="220"
+              height="70"
+              rx="8"
+              [attr.fill]="getRegionColor('villa')"
+              (click)="colorRegion('villa')"
+            />
+            <path
+              id="garden"
+              d="M180 245 H460 V280 H180 Z"
+              [attr.fill]="getRegionColor('garden')"
+              (click)="colorRegion('garden')"
+            />
+            <g id="flowers" (click)="colorRegion('flowers')">
+              <circle cx="250" cy="262" r="10" [attr.fill]="getRegionColor('flowers')" />
+              <circle cx="320" cy="258" r="8" [attr.fill]="getRegionColor('flowers')" />
+              <circle cx="390" cy="264" r="9" [attr.fill]="getRegionColor('flowers')" />
+            </g>
+            <ellipse
+              id="bird-left"
+              cx="285"
+              cy="228"
+              rx="16"
+              ry="12"
+              [attr.fill]="getRegionColor('bird-left')"
+              (click)="colorRegion('bird-left')"
+            />
+            <ellipse
+              id="bird-right"
+              cx="355"
+              cy="228"
+              rx="16"
+              ry="12"
+              [attr.fill]="getRegionColor('bird-right')"
+              (click)="colorRegion('bird-right')"
+            />
+          </svg>
+        </div>
+        <ul class="region-list">
+          @for (region of coloringRegions; track region.id) {
+            <li>
+              <span class="dot" [style.background]="getRegionColor(region.id)"></span>
+              {{ region.label }}
+            </li>
+          }
+        </ul>
+        <button mat-flat-button color="primary" type="button" (click)="checkColoring()">Finish coloring</button>
+      }
+    }
+
+    @if (feedback()) {
+      <p class="feedback" [class.success]="isLevelComplete(activeLevel())">{{ feedback() }}</p>
+    }
+  </mat-card>
+
+  @if (allComplete()) {
+    <mat-card class="success-card">
+      <app-icon name="celebration" size="lg" />
+      <h2>All puzzles complete</h2>
+      <p>You unlocked the breakup date planner. Schedule a thoughtful, honest conversation date.</p>
+      <a mat-flat-button color="primary" routerLink="/create-date-plan">Plan breakup date</a>
+    </mat-card>
+  }
+</section>

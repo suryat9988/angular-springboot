@@ -1,18 +1,50 @@
 <div class="login-screen">
   <mat-card class="login-card">
-    <img src="/bowerbird-logo.svg" alt="BowerBird logo" class="logo" />
-    <h1>Welcome to BowerBox</h1>
-    <p>Plan meaningful dates, stay organized, and get reminded before each special moment.</p>
+    <div class="brand">
+      <img src="/bowerbird-logo.svg" alt="BowerBird logo" class="logo" />
+      <div>
+        <p class="brand-label">BowerBird</p>
+        <h1>BowerBox</h1>
+      </div>
+    </div>
+
+    <p class="intro">
+      Plan meaningful dates and get gentle reminders before each special moment.
+    </p>
+
+    <div class="requirement">
+      <span class="requirement-badge">Required</span>
+      <p>Sign in with your <strong>Gmail</strong> account to continue.</p>
+    </div>
+
+    @if (!isFirebaseReady()) {
+      <div class="setup-help">
+        <h2>Firebase setup required</h2>
+        <ol>
+          <li>Create a project at <strong>console.firebase.google.com</strong></li>
+          <li>Add a Web app and copy the Firebase config</li>
+          <li>Paste it into <code>src/environments/environment.production.ts</code></li>
+          <li>Enable <strong>Google</strong> sign-in under Authentication</li>
+          <li>Add <strong>innovatedquantum.com</strong> under Authorized domains</li>
+          <li>Push to GitHub to redeploy</li>
+        </ol>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <p class="error" role="alert">{{ errorMessage() }}</p>
+    }
 
     <button
-      mat-flat-button
-      color="primary"
+      class="gmail-button"
       type="button"
-      (click)="onGoogleLogin()"
-      [disabled]="isBusy()"
+      (click)="onGmailLogin()"
+      [disabled]="isBusy() || !isFirebaseReady()"
     >
-      <mat-icon>login</mat-icon>
-      Continue with Google
+      <img src="/google-gmail-icon.svg" alt="" aria-hidden="true" class="gmail-icon" />
+      {{ isBusy() ? 'Signing in...' : 'Continue with Gmail' }}
     </button>
+
+    <p class="footnote">Only @gmail.com accounts are allowed.</p>
   </mat-card>
 </div>

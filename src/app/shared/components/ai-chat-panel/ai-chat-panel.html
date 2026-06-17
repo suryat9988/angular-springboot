@@ -1,0 +1,55 @@
+<section class="chat-panel">
+  <header class="chat-header">
+    <img src="/bowerbird-logo.svg" alt="" class="chat-avatar" />
+    <div>
+      <h2>BowerBird Planner</h2>
+      <p>Chat to auto-fill your date plan</p>
+    </div>
+  </header>
+
+  <div #messageList class="chat-messages" aria-live="polite">
+    @for (message of messages(); track message.id) {
+      <article class="message" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
+        @if (message.role === 'assistant') {
+          <img src="/bowerbird-logo.svg" alt="" class="bubble-avatar" />
+        }
+        <div class="bubble">
+          <p>{{ message.text }}</p>
+        </div>
+      </article>
+    }
+
+    @if (isBusy()) {
+      <div class="typing" aria-label="BowerBird is typing">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    }
+  </div>
+
+  <div class="chat-input">
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Describe your date plan...</mat-label>
+      <textarea
+        matInput
+        rows="2"
+        [value]="draft()"
+        (input)="updateDraft($event)"
+        (keydown.enter)="onEnter($event)"
+        [disabled]="isBusy()"
+        placeholder="e.g. Sunset dinner in Malibu this Saturday with Alex, budget $120"
+      ></textarea>
+    </mat-form-field>
+    <button
+      mat-fab
+      color="primary"
+      type="button"
+      (click)="sendMessage()"
+      [disabled]="isBusy() || !draft().trim()"
+      aria-label="Send message"
+    >
+      <app-icon name="send" size="sm" />
+    </button>
+  </div>
+</section>

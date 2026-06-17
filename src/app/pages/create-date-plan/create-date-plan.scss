@@ -1,21 +1,133 @@
+.plan-page {
+  max-width: 1180px;
+  margin: 0 auto;
+
+  &--dialog {
+    max-width: none;
+    margin: 0;
+  }
+}
+
+.plan-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 420px);
+  gap: 1rem;
+  align-items: start;
+
+  &--dialog {
+    grid-template-columns: 1fr;
+  }
+}
+
 .plan-card {
-  margin: 0.5rem auto;
-  border-radius: 16px;
+  border-radius: var(--bb-radius-lg);
   padding: 1rem;
 }
 
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
   margin-bottom: 1rem;
+}
 
+.header-copy {
   h1 {
     margin: 0;
     font-size: 1.6rem;
+    color: var(--bb-text);
   }
 
   p {
     margin: 0.35rem 0 0;
-    color: #5d5f74;
+    color: var(--bb-text-muted);
   }
+}
+
+.ai-hint {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--bb-radius-sm);
+  background: var(--bb-primary-soft);
+  color: var(--bb-primary-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.lucky-banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fdf2f8, #eef2ff);
+  border: 1px solid #dbe4ff;
+
+  p {
+    margin: 0.25rem 0 0;
+    color: #4b5563;
+    font-size: 0.9rem;
+  }
+}
+
+.lucky-savings {
+  display: grid;
+  gap: 0.2rem;
+  text-align: right;
+  font-weight: 700;
+  color: #166534;
+}
+
+.lucky-hint {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: #fff7ed;
+  color: #9a3412;
+
+  a {
+    color: #4f46e5;
+    font-weight: 700;
+  }
+}
+
+.rewards-banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff7ed, #fef3c7);
+  border: 1px solid #fcd34d;
+
+  p {
+    margin: 0.25rem 0 0;
+    color: #78350f;
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: #4f46e5;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+}
+
+.rewards-value {
+  display: grid;
+  gap: 0.2rem;
+  text-align: right;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.two-column.single-column {
+  grid-template-columns: 1fr;
 }
 
 .date-form {
@@ -32,6 +144,19 @@
 .actions {
   display: flex;
   justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+@media (max-width: 960px) {
+  .plan-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+:host-context(.date-plan-editor-dialog) {
+  display: block;
+  max-height: 85vh;
+  overflow: auto;
 }
 
 @media (max-width: 768px) {
@@ -43,7 +168,11 @@
     grid-template-columns: 1fr;
   }
 
-  .actions button {
-    width: 100%;
+  .actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
   }
 }

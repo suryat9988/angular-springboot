@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 
 import { AuthService } from './core/services/auth';
 import { MessagingService } from './core/services/messaging';
+import { AppIcon } from './shared/components/app-icon/app-icon';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { MessagingService } from './core/services/messaging';
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    AppIcon
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

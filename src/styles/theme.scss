@@ -1,0 +1,78 @@
+/* BowerBox example theme — Malibu Romance */
+
+:root {
+  /* Brand */
+  --bb-primary: #4f46e5;
+  --bb-primary-dark: #3730a3;
+  --bb-primary-soft: #eef2ff;
+
+  --bb-secondary: #db2777;
+  --bb-secondary-soft: #fdf2f8;
+
+  --bb-accent: #0ea5e9;
+  --bb-accent-soft: #e0f2fe;
+
+  /* Nature palette (Malibu scene) */
+  --bb-ocean: #1e88e5;
+  --bb-sky: #87ceeb;
+  --bb-sun: #f59e0b;
+  --bb-garden: #22c55e;
+  --bb-mountain: #1f2937;
+  --bb-villa: #f8fafc;
+
+  /* Surfaces */
+  --bb-bg: #f3f4f9;
+  --bb-surface: #ffffff;
+  --bb-surface-muted: #f8faff;
+  --bb-border: #e6e7ef;
+
+  /* Text */
+  --bb-text: #1e1b4b;
+  --bb-text-muted: #5c5f75;
+  --bb-text-soft: #6b7280;
+
+  /* Status */
+  --bb-success: #059669;
+  --bb-success-soft: #ecfdf5;
+  --bb-warning: #d97706;
+  --bb-warning-soft: #fff7ed;
+  --bb-danger: #dc2626;
+  --bb-danger-soft: #fef2f2;
+
+  /* Shape */
+  --bb-radius-sm: 10px;
+  --bb-radius-md: 14px;
+  --bb-radius-lg: 18px;
+  --bb-radius-xl: 22px;
+
+  /* Shadow */
+  --bb-shadow-sm: 0 4px 14px rgba(49, 46, 129, 0.08);
+  --bb-shadow-md: 0 12px 32px rgba(49, 46, 129, 0.12);
+
+  /* Material bridge */
+  --mat-toolbar-container-background-color: var(--bb-surface);
+  --mat-sidenav-container-background-color: var(--bb-surface);
+}
+
+body {
+  background: var(--bb-bg);
+  color: var(--bb-text);
+}
+
+a {
+  color: var(--bb-primary);
+}
+
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary {
+  --mdc-filled-button-container-color: var(--bb-primary);
+}
+
+.mat-mdc-outlined-button {
+  --mdc-outlined-button-outline-color: var(--bb-border);
+}
+
+.mat-mdc-card {
+  border-radius: var(--bb-radius-lg) !important;
+  box-shadow: var(--bb-shadow-sm) !important;
+}

@@ -1,0 +1,397 @@
+.journey {
+  position: relative;
+  min-height: calc(100dvh - 64px);
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f172a 55%, #020617 100%);
+  color: #f8fafc;
+  padding: 1.25rem;
+}
+
+.journey--intro {
+  .car-stage {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+.journey--zoom {
+  .intro-layer {
+    opacity: 0;
+  }
+
+  .car-stage {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-layer {
+  position: absolute;
+  inset: 0;
+  transition: opacity 2.8s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.intro-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(251, 191, 36, 0.18), transparent 55%);
+}
+
+.butterfly {
+  position: absolute;
+  width: 28px;
+  height: 22px;
+  opacity: 0.9;
+  animation: flutter 5s ease-in-out infinite;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    width: 14px;
+    height: 18px;
+    border-radius: 70% 70% 55% 55%;
+    background: linear-gradient(135deg, #c084fc, #f472b6);
+    box-shadow: 0 0 12px rgba(244, 114, 182, 0.45);
+  }
+
+  &::before {
+    left: 0;
+    transform: rotate(-18deg);
+  }
+
+  &::after {
+    right: 0;
+    transform: rotate(18deg);
+  }
+}
+
+.car-stage,
+.sun-stage,
+.activities-stage {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.car-stage {
+  padding-top: 2rem;
+  transition: opacity 2.4s ease, transform 2.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.car-stage--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.stage-eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a5b4fc;
+  font-weight: 700;
+}
+
+h1 {
+  margin: 0.45rem 0 0.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+
+.stage-copy {
+  margin: 0 0 1.5rem;
+  max-width: 36rem;
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.car-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.car-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 2px solid rgba(148, 163, 184, 0.25);
+  background: rgba(15, 23, 42, 0.72);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(129, 140, 248, 0.8);
+    box-shadow: 0 18px 40px rgba(30, 64, 175, 0.28);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #94a3b8;
+    line-height: 1.45;
+    font-size: 0.92rem;
+  }
+}
+
+.car-visual {
+  height: 140px;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: auto 12% 18px;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.45);
+    filter: blur(4px);
+  }
+}
+
+.car-visual.mustang {
+  background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 55%, #1e293b 100%);
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 14%;
+    right: 10%;
+    top: 42%;
+    height: 34px;
+    border-radius: 10px 28px 8px 8px;
+    background: linear-gradient(180deg, #ef4444, #991b1b);
+    box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.18);
+  }
+}
+
+.car-visual.lexus {
+  background: linear-gradient(180deg, #0f172a 0%, #334155 55%, #1e293b 100%);
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 8%;
+    top: 46%;
+    height: 30px;
+    border-radius: 12px 18px 8px 8px;
+    background: linear-gradient(180deg, #e2e8f0, #64748b);
+    box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.15);
+  }
+}
+
+.sun-stage {
+  padding-top: 1rem;
+}
+
+.back-link {
+  border: 0;
+  background: transparent;
+  color: #a5b4fc;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  padding: 0;
+}
+
+.sky-canvas {
+  position: relative;
+  min-height: 360px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.08);
+  transition: background 0.35s ease;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.35) 35%, #0f172a 100%);
+}
+
+.celestial {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.sun {
+  width: 72px;
+  height: 72px;
+}
+
+.sun-core {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff7cc, #fbbf24 45%, #f97316 100%);
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.75);
+}
+
+.sun-rays {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  border: 2px dashed rgba(251, 191, 36, 0.35);
+  animation: spin 18s linear infinite;
+}
+
+.moon {
+  z-index: 1;
+  transition: transform 0.35s ease, left 0.35s ease, top 0.35s ease;
+  pointer-events: none;
+}
+
+.moon-face {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  filter: drop-shadow(0 0 18px rgba(199, 210, 254, 0.55));
+}
+
+.phase-label {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.continue-btn {
+  margin-top: 1rem;
+}
+
+.activities-stage {
+  padding-top: 0.5rem;
+}
+
+.activities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.activity-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 2px solid rgba(148, 163, 184, 0.22);
+  background: rgba(15, 23, 42, 0.72);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+
+  &:hover,
+  &.selected {
+    border-color: #818cf8;
+    transform: translateY(-2px);
+    background: rgba(30, 41, 59, 0.92);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+}
+
+.activity-icon {
+  font-size: 1.6rem;
+}
+
+.activities-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+@keyframes flutter {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.95;
+  }
+
+  25% {
+    transform: translate(12px, -16px) rotate(8deg);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: translate(-8px, -28px) rotate(-6deg);
+    opacity: 0.55;
+  }
+
+  75% {
+    transform: translate(10px, -12px) rotate(5deg);
+    opacity: 0.35;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .journey {
+    padding: 0.85rem;
+  }
+
+  .car-options {
+    grid-template-columns: 1fr;
+  }
+
+  .activities-header {
+    flex-direction: column;
+  }
+
+  .activities-footer button,
+  .continue-btn {
+    width: 100%;
+  }
+}

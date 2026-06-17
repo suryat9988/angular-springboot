@@ -6,6 +6,7 @@ import { User } from 'firebase/auth';
 import { getMessaging, getToken, isSupported, onMessage, type Messaging } from 'firebase/messaging';
 
 import { environment } from '../../../environments/environment';
+import { isFirebaseConfigured } from '../config/firebase-config';
 
 interface NotificationPreview {
   title: string;
@@ -30,41 +31,45 @@ export class MessagingService {
   readonly notifications = this.notificationItems.asReadonly();
 
   async requestPermissionAndStoreToken(user: User): Promise<void> {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || !isFirebaseConfigured(environment.firebaseConfig)) {
       return;
     }
 
-    if (this.initializedUid === user.uid) {
+    try {
+      if (this.initializedUid === user.uid) {
+        return;
+      }
+
+      const supported = await isSupported();
+      if (!supported) {
+        return;
+      }
+
+      if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+
+      if (Notification.permission !== 'granted') {
+        return;
+      }
+
+      this.messaging ??= getMessaging(this.firebaseApp);
+      const registration = await this.ensureServiceWorker();
+      const token = await getToken(this.messaging, {
+        vapidKey: environment.vapidKey,
+        serviceWorkerRegistration: registration ?? undefined
+      });
+
+      if (!token) {
+        return;
+      }
+
+      await this.persistToken(user.uid, token);
+      this.listenForForegroundMessages();
+      this.initializedUid = user.uid;
+    } catch {
       return;
     }
-
-    const supported = await isSupported();
-    if (!supported) {
-      return;
-    }
-
-    if (Notification.permission === 'default') {
-      await Notification.requestPermission();
-    }
-
-    if (Notification.permission !== 'granted') {
-      return;
-    }
-
-    this.messaging ??= getMessaging(this.firebaseApp);
-    const registration = await this.ensureServiceWorker();
-    const token = await getToken(this.messaging, {
-      vapidKey: environment.vapidKey,
-      serviceWorkerRegistration: registration ?? undefined
-    });
-
-    if (!token) {
-      return;
-    }
-
-    await this.persistToken(user.uid, token);
-    this.listenForForegroundMessages();
-    this.initializedUid = user.uid;
   }
 
   private async ensureServiceWorker(): Promise<ServiceWorkerRegistration | null> {

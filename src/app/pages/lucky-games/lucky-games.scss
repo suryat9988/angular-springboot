@@ -1,0 +1,339 @@
+.lucky-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+
+  h1 {
+    margin: 0.2rem 0;
+  }
+
+  p {
+    margin: 0;
+    color: #5c5f75;
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #db2777;
+  font-weight: 700;
+}
+
+.lucky-score {
+  text-align: center;
+  padding: 0.7rem 1rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fdf2f8, #eef2ff);
+
+  .score-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #4f46e5;
+    line-height: 1;
+  }
+
+  small {
+    color: #6b7280;
+  }
+}
+
+.lucky-score.rewards-score {
+  background: linear-gradient(135deg, #fff7ed, #fef3c7);
+
+  .score-value {
+    color: #b45309;
+  }
+}
+
+.rewards-card {
+  .redeem-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+
+  .redeem-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #fde68a;
+    border-radius: 12px;
+    background: #fffbeb;
+
+    p {
+      margin: 0.2rem 0 0;
+      color: #92400e;
+      font-size: 0.9rem;
+    }
+  }
+
+  .redeemed-list {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #fde68a;
+
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    p {
+      margin: 0.2rem 0;
+      color: #78350f;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.game-card {
+  padding: 1rem;
+  border-radius: 16px;
+  display: grid;
+  gap: 0.45rem;
+
+  app-icon {
+    display: block;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    flex: 1;
+  }
+}
+
+.score-pill {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #ecfdf5;
+  color: #166534;
+
+  &.pending {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+}
+
+.bill-card {
+  padding: 1rem;
+  border-radius: 16px;
+
+  h2 {
+    margin: 0 0 0.35rem;
+  }
+
+  p {
+    margin: 0 0 0.8rem;
+    color: #5c5f75;
+  }
+}
+
+.bill-field {
+  width: min(240px, 100%);
+  display: block;
+}
+
+.bill-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.8rem 0 1rem;
+
+  div {
+    padding: 0.7rem;
+    border-radius: 12px;
+    background: #f8fafc;
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+
+  strong {
+    font-size: 1.1rem;
+  }
+
+  .save {
+    color: #059669;
+  }
+}
+
+.game-message {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 600;
+}
+
+.game-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-card {
+  width: min(520px, 100%);
+  padding: 1rem;
+  border-radius: 18px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.heart-arena {
+  position: relative;
+  height: 260px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fdf2f8, #eef2ff);
+  overflow: hidden;
+  margin: 0.8rem 0;
+}
+
+.falling-heart {
+  position: absolute;
+  top: -30px;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  animation: fall 2.8s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(300px);
+    opacity: 0.2;
+  }
+}
+
+.mini-stats {
+  margin: 0 0 0.75rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.math-progress {
+  margin: 0 0 0.35rem;
+  color: #6b7280;
+}
+
+.math-prompt {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.math-field {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.memory-card {
+  height: 64px;
+  border-radius: 10px;
+  border: 1px solid #c7d2fe;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+
+  &.flipped,
+  &.matched {
+    background: #fff;
+    color: #111827;
+  }
+
+  &.matched {
+    border-color: #86efac;
+    background: #f0fdf4;
+  }
+}
+
+.dice-row {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0.8rem 0;
+}
+
+.die {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 2px solid #c7d2fe;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1000px) {
+  .games-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page-header,
+  .bill-breakdown {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+}

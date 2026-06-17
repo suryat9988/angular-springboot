@@ -1,0 +1,67 @@
+<svg width="640" height="400" viewBox="0 0 640 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two people sitting by a lake looking at each other">
+  <defs>
+    <linearGradient id="sky" x1="320" y1="0" x2="320" y2="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BFD9FF"/>
+      <stop offset="1" stop-color="#E8F2FF"/>
+    </linearGradient>
+    <linearGradient id="water" x1="320" y1="210" x2="320" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5BA4D9"/>
+      <stop offset="1" stop-color="#2E6F9E"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="120" y1="120" x2="520" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7CB87A"/>
+      <stop offset="1" stop-color="#4F8F57"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="400" fill="url(#sky)"/>
+  <circle cx="520" cy="72" r="34" fill="#FFE08A"/>
+  <ellipse cx="110" cy="95" rx="70" ry="24" fill="#FFFFFF" opacity="0.85"/>
+  <ellipse cx="250" cy="70" rx="90" ry="28" fill="#FFFFFF" opacity="0.75"/>
+  <ellipse cx="430" cy="88" rx="80" ry="22" fill="#FFFFFF" opacity="0.7"/>
+
+  <path d="M0 220C90 180 170 250 280 215C390 180 470 235 640 205V400H0V220Z" fill="url(#hill)"/>
+  <path d="M0 250C120 230 220 285 340 255C460 225 540 275 640 245V400H0V250Z" fill="url(#water)"/>
+
+  <path d="M40 285C120 270 200 295 320 280C440 265 520 292 600 275" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>
+  <path d="M80 305C170 295 250 318 360 302C470 286 540 312 620 298" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round"/>
+
+  <ellipse cx="175" cy="318" rx="18" ry="8" fill="#355C45" opacity="0.35"/>
+  <ellipse cx="465" cy="318" rx="18" ry="8" fill="#355C45" opacity="0.35"/>
+
+  <!-- Person left -->
+  <path d="M150 285C150 268 162 256 176 256C190 256 202 268 202 285" fill="#F2C7A5"/>
+  <circle cx="176" cy="242" r="18" fill="#F2C7A5"/>
+  <path d="M158 236C164 226 188 226 194 236C188 248 164 248 158 236Z" fill="#5C3D2E"/>
+  <path d="M168 285L160 318H192L184 285H168Z" fill="#4F46E5"/>
+  <path d="M160 318L154 338H166L168 318H160Z" fill="#3F3D56"/>
+  <path d="M184 318L182 338H194L192 318H184Z" fill="#3F3D56"/>
+  <path d="M150 278C156 272 166 270 176 272" stroke="#5C3D2E" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Person right -->
+  <path d="M438 285C438 268 450 256 464 256C478 256 490 268 490 285" fill="#E8B796"/>
+  <circle cx="464" cy="242" r="18" fill="#E8B796"/>
+  <path d="M446 236C452 224 476 224 482 236C476 250 452 250 446 236Z" fill="#3D2A22"/>
+  <path d="M456 285L448 318H480L472 285H456Z" fill="#BE185D"/>
+  <path d="M448 318L442 338H454L456 318H448Z" fill="#3F3D56"/>
+  <path d="M472 318L470 338H482L480 318H472Z" fill="#3F3D56"/>
+  <path d="M490 278C484 272 474 270 464 272" stroke="#3D2A22" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Eye contact hearts -->
+  <path d="M308 250C308 242 314 238 318 242C322 238 328 242 328 250C328 258 318 266 318 266C318 266 308 258 308 250Z" fill="#F472B6" opacity="0.85"/>
+  <path d="M292 262C300 258 306 262 308 268" stroke="#F472B6" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M328 268C330 262 336 258 344 262" stroke="#F472B6" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Bench/log -->
+  <rect x="130" y="300" width="380" height="10" rx="5" fill="#8B5E3C"/>
+  <rect x="145" y="310" width="12" height="18" rx="3" fill="#6D4C33"/>
+  <rect x="483" y="310" width="12" height="18" rx="3" fill="#6D4C33"/>
+
+  <!-- Reeds -->
+  <path d="M30 250V320" stroke="#4F8F57" stroke-width="3" stroke-linecap="round"/>
+  <path d="M42 260V325" stroke="#4F8F57" stroke-width="3" stroke-linecap="round"/>
+  <path d="M54 255V318" stroke="#4F8F57" stroke-width="3" stroke-linecap="round"/>
+  <path d="M585 255V318" stroke="#4F8F57" stroke-width="3" stroke-linecap="round"/>
+  <path d="M598 262V325" stroke="#4F8F57" stroke-width="3" stroke-linecap="round"/>
+  <path d="M611 250V320" stroke="#4F8F57" stroke-width="3" stroke-linecap="round"/>
+</svg>

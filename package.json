@@ -9,7 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy:hosting": "npm run build:prod && firebase deploy --only hosting",
-    "build:godaddy": "ng build --configuration production"
+    "build:godaddy": "ng build --configuration production && node scripts/copy-404.js",
+    "package:godaddy": "npm run build:godaddy && node scripts/package-godaddy.js"
   },
   "prettier": {
     "printWidth": 100,
@@ -36,6 +37,7 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
     "firebase": "^11.10.0",
+    "jspdf": "^4.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

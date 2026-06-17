@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Malibu scene coloring diagram">
+  <rect id="sky" x="0" y="0" width="640" height="220" fill="#E8EEF8" stroke="#CBD5E1" stroke-width="2"/>
+  <circle id="sun" cx="520" cy="72" r="34" fill="#F3F4F6" stroke="#CBD5E1" stroke-width="2"/>
+  <ellipse id="clouds" cx="180" cy="88" rx="120" ry="28" fill="#F3F4F6" stroke="#CBD5E1" stroke-width="2"/>
+  <path id="ocean" d="M0 220 C120 200 220 250 340 230 C460 210 540 250 640 230 L640 400 L0 400 Z" fill="#E0E7FF" stroke="#CBD5E1" stroke-width="2"/>
+  <path id="mountain" d="M0 220 C90 180 170 250 280 215 C390 180 470 235 640 205 L640 250 L0 250 Z" fill="#D1D5DB" stroke="#CBD5E1" stroke-width="2"/>
+  <rect id="villa" x="210" y="175" width="220" height="70" rx="8" fill="#F9FAFB" stroke="#CBD5E1" stroke-width="2"/>
+  <path id="garden" d="M180 245 H460 V280 H180 Z" fill="#E8F5E9" stroke="#CBD5E1" stroke-width="2"/>
+  <circle id="flowers" cx="250" cy="262" r="10" fill="#FCE7F3" stroke="#CBD5E1" stroke-width="2"/>
+  <circle cx="320" cy="258" r="8" fill="#FCE7F3" stroke="#CBD5E1" stroke-width="2"/>
+  <circle cx="390" cy="264" r="9" fill="#FCE7F3" stroke="#CBD5E1" stroke-width="2"/>
+  <ellipse id="bird-left" cx="285" cy="228" rx="16" ry="12" fill="#EEF2FF" stroke="#CBD5E1" stroke-width="2"/>
+  <ellipse id="bird-right" cx="355" cy="228" rx="16" ry="12" fill="#EEF2FF" stroke="#CBD5E1" stroke-width="2"/>
+</svg>

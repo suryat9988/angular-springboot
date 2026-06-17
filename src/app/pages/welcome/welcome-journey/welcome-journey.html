@@ -1,0 +1,131 @@
+<section class="journey" [class.journey--intro]="step() === 'intro'" [class.journey--zoom]="introPhase() === 'zoom'">
+  @if (step() === 'intro') {
+    <div class="intro-layer" aria-hidden="true">
+      @for (butterfly of butterflies(); track butterfly.id) {
+        <span
+          class="butterfly"
+          [style.left.%]="butterfly.left"
+          [style.top.%]="butterfly.top"
+          [style.animationDelay.s]="butterfly.delay"
+          [style.animationDuration.s]="butterfly.duration"
+          [style.transform]="'scale(' + butterfly.scale + ')'"
+          [style.filter]="'hue-rotate(' + butterfly.hue + 'deg)'"
+        ></span>
+      }
+      <div class="intro-glow"></div>
+    </div>
+  }
+
+  @if (step() === 'intro' || step() === 'car') {
+    <div class="car-stage" [class.car-stage--visible]="step() === 'car' || introPhase() === 'zoom'">
+      <p class="stage-eyebrow">Choose your ride</p>
+      <h1>Where are we headed?</h1>
+      <p class="stage-copy">
+        Mustang keeps you in the city. Lexus takes you beyond it.
+      </p>
+
+      <div class="car-options">
+        <button type="button" class="car-card car-card--mustang" (click)="selectCar('mustang')">
+          <div class="car-visual mustang" aria-hidden="true"></div>
+          <div class="car-copy">
+            <h2>Ford Mustang</h2>
+            <p>City energy — restaurants, drinks, and shopping within 50 miles.</p>
+          </div>
+        </button>
+
+        <button type="button" class="car-card car-card--lexus" (click)="selectCar('lexus')">
+          <div class="car-visual lexus" aria-hidden="true"></div>
+          <div class="car-copy">
+            <h2>Lexus</h2>
+            <p>Open-road escapes — hikes, waterfalls, and horse country.</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (step() === 'sun') {
+    <div class="sun-stage">
+      <button type="button" class="back-link" (click)="backToCar()">← Back to cars</button>
+      <p class="stage-eyebrow">{{ selectedCar() === 'mustang' ? 'Mustang • In the city' : 'Lexus • Outside the city' }}</p>
+      <h1>Set the sky</h1>
+      <p class="stage-copy">Drag the sun to match the mood. The moon scales with the light.</p>
+
+      <div
+        class="sky-canvas"
+        [style.background]="skyGradient()"
+        (pointerdown)="onSkyPointerDown($event)"
+        (pointermove)="onSkyPointerMove($event)"
+        (pointerup)="onSkyPointerUp()"
+        (pointercancel)="onSkyPointerUp()"
+      >
+        <div class="horizon"></div>
+        <div
+          class="celestial moon"
+          [style.left.%]="moonLeft()"
+          [style.top.%]="moonTop()"
+          [style.transform]="'scale(' + moonScale() + ')'"
+        >
+          <span class="moon-face">🌙</span>
+        </div>
+        <div
+          class="celestial sun"
+          [style.left.%]="sunLeft()"
+          [style.top.%]="sunTop()"
+        >
+          <span class="sun-core"></span>
+          <span class="sun-rays"></span>
+        </div>
+        <p class="phase-label">{{ phaseLabel() }}</p>
+      </div>
+
+      <button mat-flat-button color="primary" type="button" class="continue-btn" (click)="continueToActivities()">
+        See activities for this sky
+      </button>
+    </div>
+  }
+
+  @if (step() === 'activities' && selection(); as journey) {
+    <div class="activities-stage">
+      <button type="button" class="back-link" (click)="backToSun()">← Back to sky</button>
+
+      <div class="activities-header">
+        <div>
+          <p class="stage-eyebrow">
+            {{ journey.car === 'mustang' ? 'Mustang' : 'Lexus' }} • {{ journey.phaseLabel }}
+          </p>
+          <h1>Pick your date vibe</h1>
+          <p class="stage-copy">{{ journey.locationScope }}</p>
+        </div>
+        <button mat-stroked-button type="button" (click)="restartJourney()">Start over</button>
+      </div>
+
+      <div class="activity-grid">
+        @for (activity of journey.activities; track activity.id) {
+          <button
+            type="button"
+            class="activity-card"
+            [class.selected]="pickedActivity()?.id === activity.id"
+            (click)="pickActivity(activity)"
+          >
+            <span class="activity-icon">{{ activity.icon }}</span>
+            <h3>{{ activity.label }}</h3>
+            <p>{{ activity.description }}</p>
+          </button>
+        }
+      </div>
+
+      <div class="activities-footer">
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="!pickedActivity()"
+          (click)="planSelectedActivity()"
+        >
+          Plan this date
+        </button>
+      </div>
+    </div>
+  }
+</section>

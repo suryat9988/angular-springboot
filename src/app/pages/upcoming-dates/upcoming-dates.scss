@@ -16,14 +16,98 @@
   }
 }
 
-.dates-grid {
+.dates-layout {
   display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
   gap: 1rem;
+  align-items: start;
+}
+
+.dates-list {
+  display: grid;
+  gap: 0.8rem;
 }
 
 .date-card {
   border-radius: 14px;
   padding: 0.3rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease;
+
+  &.selected {
+    border-color: #818cf8;
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.12);
+  }
+}
+
+.pdf-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #4f46e5;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdf-panel {
+  border-radius: 14px;
+  padding: 0.75rem;
+  min-height: 720px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.pdf-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  p {
+    margin: 0.2rem 0 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+}
+
+.pdf-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.plan-detail {
+  padding: 0.5rem 0.25rem;
+
+  .description {
+    margin: 0 0 1rem;
+    color: #303242;
+    line-height: 1.5;
+  }
+
+  .notes {
+    margin: 0.75rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid #ececf4;
+    color: #3f4157;
+    white-space: pre-wrap;
+  }
+}
+
+.pdf-viewer {
+  width: 100%;
+  min-height: 640px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
 }
 
 .card-header {
@@ -36,6 +120,13 @@
     margin: 0;
     font-size: 1.2rem;
   }
+}
+
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
 }
 
 .chip {
@@ -60,13 +151,7 @@
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    color: #51546a;
-  }
-
-  mat-icon {
-    font-size: 1.05rem;
-    width: 1.05rem;
-    height: 1.05rem;
+    color: var(--bb-text-muted);
   }
 }
 
@@ -82,11 +167,9 @@
   text-align: center;
   border-radius: 14px;
 
+  app-icon,
   mat-icon {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
-    color: #5f63aa;
+    flex-shrink: 0;
   }
 
   h2 {
@@ -100,6 +183,14 @@
 }
 
 @media (max-width: 768px) {
+  .dates-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pdf-viewer {
+    min-height: 480px;
+  }
+
   .page-header {
     flex-direction: column;
     align-items: stretch;

@@ -11,6 +11,17 @@ export const authGuard: CanActivateFn = () => {
 
   return authService.user$.pipe(
     take(1),
-    map((user) => user ? true : router.createUrlTree(['/login']))
+    map((user) => {
+      if (!user) {
+        return router.createUrlTree(['/login']);
+      }
+
+      if (!authService.isGmailAccount(user)) {
+        void authService.signOut();
+        return router.createUrlTree(['/login']);
+      }
+
+      return true;
+    })
   );
 };
