@@ -1,0 +1,18 @@
+<div class="login-screen">
+  <mat-card class="login-card">
+    <img src="/bowerbird-logo.svg" alt="BowerBird logo" class="logo" />
+    <h1>Welcome to BowerBox</h1>
+    <p>Plan meaningful dates, stay organized, and get reminded before each special moment.</p>
+
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="onGoogleLogin()"
+      [disabled]="isBusy()"
+    >
+      <mat-icon>login</mat-icon>
+      Continue with Google
+    </button>
+  </mat-card>
+</div>

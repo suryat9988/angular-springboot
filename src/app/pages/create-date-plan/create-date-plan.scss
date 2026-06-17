@@ -1,0 +1,49 @@
+.plan-card {
+  margin: 0.5rem auto;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #5d5f74;
+  }
+}
+
+.date-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.two-column {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .plan-card {
+    padding: 0.8rem;
+  }
+
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

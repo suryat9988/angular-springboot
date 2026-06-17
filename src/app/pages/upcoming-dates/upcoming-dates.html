@@ -1,0 +1,63 @@
+<section class="page-header">
+  <div>
+    <h1>Upcoming Dates</h1>
+    <p>Your confirmed plans are listed in chronological order.</p>
+  </div>
+  <a mat-flat-button color="primary" routerLink="/create-date-plan">
+    <mat-icon>add</mat-icon>
+    New date plan
+  </a>
+</section>
+
+@if (upcomingDatePlans$ | async; as datePlans) {
+  @if (datePlans.length === 0) {
+    <mat-card class="empty-state">
+      <mat-icon>event_busy</mat-icon>
+      <h2>No upcoming dates yet</h2>
+      <p>Create your first date plan to see it here.</p>
+      <a mat-stroked-button routerLink="/create-date-plan">Create a plan</a>
+    </mat-card>
+  } @else {
+    <section class="dates-grid">
+      @for (datePlan of datePlans; track trackById($index, datePlan)) {
+        <mat-card class="date-card">
+          <div class="card-header">
+            <h2>{{ datePlan.title }}</h2>
+            <span class="chip">{{ countdownLabel(datePlan.dateTime) }}</span>
+          </div>
+
+          <p class="description">{{ datePlan.description }}</p>
+
+          <div class="meta">
+            <div>
+              <mat-icon>schedule</mat-icon>
+              <span>{{ datePlan.dateTime | date: 'EEE, MMM d, y • h:mm a' }}</span>
+            </div>
+            <div>
+              <mat-icon>location_on</mat-icon>
+              <span>{{ datePlan.location }}</span>
+            </div>
+            @if (datePlan.partnerName) {
+              <div>
+                <mat-icon>favorite</mat-icon>
+                <span>With {{ datePlan.partnerName }}</span>
+              </div>
+            }
+            @if (datePlan.budget !== undefined && datePlan.budget !== null) {
+              <div>
+                <mat-icon>payments</mat-icon>
+                <span>Budget: ${{ datePlan.budget | number: '1.0-2' }}</span>
+              </div>
+            }
+          </div>
+
+          @if (datePlan.notes) {
+            <p class="notes">
+              {{ datePlan.notes }}
+            </p>
+          }
+        </mat-card>
+      }
+    </section>
+  }
+}

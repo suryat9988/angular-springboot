@@ -1,0 +1,77 @@
+.shell-container {
+  min-height: 100dvh;
+  background: #f3f4f9;
+}
+
+.app-sidenav {
+  width: 280px;
+  border-right: 1px solid #e6e7ef;
+  padding: 1rem 0.75rem;
+}
+
+.brand-block {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  margin: 0.6rem 0.4rem 1.2rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.2rem 0 0;
+    color: #585a73;
+    font-size: 0.85rem;
+  }
+}
+
+.brand-logo {
+  width: 48px;
+  height: 48px;
+}
+
+.active-link {
+  border-radius: 10px;
+  background: #e8edff;
+}
+
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 1px solid #e6e7ef;
+  background: #fff;
+}
+
+.toolbar-title {
+  font-weight: 700;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.welcome-text {
+  margin-right: 0.75rem;
+  color: #4f5164;
+  font-size: 0.9rem;
+}
+
+.content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .welcome-text {
+    display: none;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+}

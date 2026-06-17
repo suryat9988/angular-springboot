@@ -1,0 +1,17 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f3f4f9;
+  color: #1c1c28;
+  font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
+}
