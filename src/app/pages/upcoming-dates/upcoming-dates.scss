@@ -1,0 +1,111 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.7rem;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #5c5f75;
+  }
+}
+
+.dates-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.date-card {
+  border-radius: 14px;
+  padding: 0.3rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+}
+
+.chip {
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #2d3a7f;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.description {
+  margin: 0.75rem 0;
+  color: #303242;
+}
+
+.meta {
+  display: grid;
+  gap: 0.5rem;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #51546a;
+  }
+
+  mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+}
+
+.notes {
+  margin: 0.85rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid #ececf4;
+  color: #3f4157;
+}
+
+.empty-state {
+  padding: 2rem 1.2rem;
+  text-align: center;
+  border-radius: 14px;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: #5f63aa;
+  }
+
+  h2 {
+    margin: 0.75rem 0 0.35rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    color: #575a72;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-header a {
+    width: 100%;
+  }
+}

@@ -1,0 +1,72 @@
+<mat-card class="plan-card">
+  <div class="header">
+    <h1>Create Date Plan</h1>
+    <p>Capture your next idea and keep it organized in BowerBox.</p>
+  </div>
+
+  <form [formGroup]="datePlanForm" (ngSubmit)="createDatePlan()" class="date-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" maxlength="80" placeholder="Rooftop dinner" />
+      @if (datePlanForm.controls.title.hasError('required')) {
+        <mat-error>Title is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="3"
+        maxlength="500"
+        placeholder="What makes this date special?"
+      ></textarea>
+      @if (datePlanForm.controls.description.hasError('required')) {
+        <mat-error>Description is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="two-column">
+      <mat-form-field appearance="outline">
+        <mat-label>Date & time</mat-label>
+        <input matInput type="datetime-local" formControlName="dateTime" />
+        @if (datePlanForm.controls.dateTime.hasError('required')) {
+          <mat-error>Date and time are required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" placeholder="City Botanical Garden" />
+        @if (datePlanForm.controls.location.hasError('required')) {
+          <mat-error>Location is required.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="two-column">
+      <mat-form-field appearance="outline">
+        <mat-label>Partner name (optional)</mat-label>
+        <input matInput formControlName="partnerName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Budget (optional)</mat-label>
+        <input matInput type="number" min="0" formControlName="budget" />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Notes (optional)</mat-label>
+      <textarea matInput formControlName="notes" rows="3" maxlength="500"></textarea>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting()">
+        <mat-icon>save</mat-icon>
+        Save date plan
+      </button>
+    </div>
+  </form>
+</mat-card>
