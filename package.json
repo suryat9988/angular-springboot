@@ -8,7 +8,8 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy:hosting": "npm run build:prod && firebase deploy --only hosting"
+    "deploy:hosting": "npm run build:prod && firebase deploy --only hosting",
+    "build:godaddy": "ng build --configuration production"
   },
   "prettier": {
     "printWidth": 100,
