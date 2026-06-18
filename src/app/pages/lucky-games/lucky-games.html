@@ -142,9 +142,11 @@
               <mat-label>Answer</mat-label>
               <input
                 matInput
-                type="number"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
                 [ngModel]="mathAnswer()"
-                (ngModelChange)="mathAnswer.set($event)"
+                (ngModelChange)="mathAnswer.set($event ?? '')"
                 (keyup.enter)="submitMathAnswer()"
               />
             </mat-form-field>

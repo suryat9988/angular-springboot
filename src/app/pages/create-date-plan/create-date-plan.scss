@@ -135,6 +135,32 @@
   gap: 0.8rem;
 }
 
+.weather-note {
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+  border: 1px solid #bae6fd;
+
+  p {
+    margin: 0;
+    color: #0c4a6e;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  small {
+    display: block;
+    margin-top: 0.35rem;
+    color: #0369a1;
+    font-size: 0.82rem;
+  }
+
+  &--loading p {
+    font-weight: 500;
+    color: #475569;
+  }
+}
+
 .two-column {
   display: grid;
   gap: 0.8rem;

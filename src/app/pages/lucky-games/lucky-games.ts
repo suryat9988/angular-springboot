@@ -192,7 +192,22 @@ export class LuckyGames implements OnDestroy {
     }
 
     const current = this.mathQuestions()[this.mathIndex()];
-    const given = Number(this.mathAnswer().trim());
+    if (!current) {
+      return;
+    }
+
+    const rawAnswer = String(this.mathAnswer() ?? '').trim();
+    if (!rawAnswer) {
+      this.gameMessage.set('Enter an answer before submitting.');
+      return;
+    }
+
+    const given = Number(rawAnswer);
+    if (Number.isNaN(given)) {
+      this.gameMessage.set('Enter a valid number.');
+      return;
+    }
+
     let correct = this.mathCorrect();
     if (given === current.answer) {
       correct += 1;
@@ -209,6 +224,7 @@ export class LuckyGames implements OnDestroy {
 
     this.mathIndex.set(nextIndex);
     this.mathAnswer.set('');
+    this.gameMessage.set(null);
   }
 
   // Memory Match

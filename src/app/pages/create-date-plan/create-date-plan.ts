@@ -26,6 +26,7 @@ import { DatePlanService } from '../../core/services/date-plan';
 import { LuckyDiscountService } from '../../core/services/lucky-discount';
 import { PartnerRelationshipService } from '../../core/services/partner-relationship';
 import { RewardsProgramService } from '../../core/services/rewards-program';
+import { WeatherService } from '../../core/services/weather';
 import { DatePlanFormPatch } from '../../models/date-plan-form-patch.model';
 import { DatePlan } from '../../models/date-plan.model';
 import {
@@ -87,8 +88,11 @@ export class CreateDatePlan implements OnInit {
   private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly dialogRef = inject(MatDialogRef<CreateDatePlan>, { optional: true });
   private readonly dialogData = inject<DatePlanEditorDialogData>(MAT_DIALOG_DATA, { optional: true });
+  private readonly weatherService = inject(WeatherService);
 
   private readonly submitting = signal(false);
+  private weatherPreviewRequest = 0;
+  private weatherDebounceTimer: ReturnType<typeof setTimeout> | null = null;
   private lastAppliedPatchKey = '';
   private initialRelationship = this.partnerRelationshipService.relationship();
 
@@ -108,6 +112,8 @@ export class CreateDatePlan implements OnInit {
   readonly luckyDiscountPercent = this.luckyDiscountService.luckyDiscountPercent;
   readonly availableRewardsPoints = this.rewardsProgramService.availablePoints;
   readonly rewardsValue = this.rewardsProgramService.pointsValue;
+  readonly weatherPreview = signal<string | null>(null);
+  readonly weatherLoading = signal(false);
   readonly minDate = (() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -172,6 +178,11 @@ export class CreateDatePlan implements OnInit {
       this.applyFormPatch(patch);
       this.lastAppliedPatchKey = patchKey;
       this.formUpdatedByAi.set(true);
+    });
+
+    effect(() => {
+      const formValue = this.formSnapshot() as DatePlanFormValue;
+      this.scheduleWeatherPreview(formValue);
     });
   }
 
@@ -270,8 +281,16 @@ export class CreateDatePlan implements OnInit {
       }
 
       const mergedNotes = editingPlan
-        ? [rewardsNote, formValue.notes.trim()].filter(Boolean).join('\n\n') || undefined
-        : [rewardsNote, luckyNote, formValue.notes.trim()].filter(Boolean).join('\n\n') || undefined;
+        ? await this.buildNotesWithWeather(
+            [rewardsNote, formValue.notes.trim()].filter(Boolean).join('\n\n') || '',
+            formValue.location.trim(),
+            dateTime
+          )
+        : await this.buildNotesWithWeather(
+            [rewardsNote, luckyNote, formValue.notes.trim()].filter(Boolean).join('\n\n') || '',
+            formValue.location.trim(),
+            dateTime
+          );
 
       const payload = {
         title: formValue.title.trim() || undefined,
@@ -281,7 +300,7 @@ export class CreateDatePlan implements OnInit {
         relationshipType: formValue.relationshipType,
         partnerName: formValue.partnerName.trim() || undefined,
         budget: config.showBudget ? formValue.budget : null,
-        notes: mergedNotes,
+        notes: mergedNotes || undefined,
         luckyDiscountPercent: luckyDiscountPercent > 0 ? luckyDiscountPercent : null,
         rewardsRedemption
       };
@@ -334,6 +353,72 @@ export class CreateDatePlan implements OnInit {
     this.loadPlanForEdit(plan);
   }
 
+  private scheduleWeatherPreview(formValue: DatePlanFormValue): void {
+    if (this.weatherDebounceTimer) {
+      clearTimeout(this.weatherDebounceTimer);
+    }
+
+    const location = formValue.location.trim();
+    if (!formValue.date || !location || this.datePlanForm.controls.location.invalid) {
+      this.weatherPreview.set(null);
+      this.weatherLoading.set(false);
+      return;
+    }
+
+    this.weatherDebounceTimer = setTimeout(() => {
+      void this.refreshWeatherPreview(formValue.date, formValue.time, location);
+    }, 450);
+  }
+
+  private async refreshWeatherPreview(
+    date: Date | null,
+    time: string,
+    location: string
+  ): Promise<void> {
+    if (!date) {
+      return;
+    }
+
+    const requestId = ++this.weatherPreviewRequest;
+    this.weatherLoading.set(true);
+
+    try {
+      const dateTime = new Date(resolveDateTimeForSave(date, time));
+      const note = await this.weatherService.getWeatherNote(location, dateTime);
+      if (requestId !== this.weatherPreviewRequest) {
+        return;
+      }
+
+      this.weatherPreview.set(note);
+    } catch {
+      if (requestId === this.weatherPreviewRequest) {
+        this.weatherPreview.set(null);
+      }
+    } finally {
+      if (requestId === this.weatherPreviewRequest) {
+        this.weatherLoading.set(false);
+      }
+    }
+  }
+
+  private async buildNotesWithWeather(
+    notes: string,
+    location: string,
+    dateTime: string
+  ): Promise<string> {
+    const cleanedNotes = this.weatherService.stripWeatherNote(notes);
+    if (!location.trim()) {
+      return cleanedNotes;
+    }
+
+    const weatherNote = await this.weatherService.getWeatherNote(location, new Date(dateTime));
+    if (!weatherNote) {
+      return cleanedNotes;
+    }
+
+    return [weatherNote, cleanedNotes].filter(Boolean).join('\n\n');
+  }
+
   private loadPlanForEdit(plan: DatePlan): void {
     this.editingPlan.set(plan);
 
@@ -358,7 +443,7 @@ export class CreateDatePlan implements OnInit {
       partnerName: plan.partnerName ?? '',
       budget: plan.budget ?? null,
       rewardsRedemptionType: plan.rewardsRedemption?.type ?? null,
-      notes: plan.notes ?? ''
+      notes: this.weatherService.stripWeatherNote(plan.notes ?? '')
     });
     this.applyRelationshipRules(relationship);
     this.formUpdatedByAi.set(false);
