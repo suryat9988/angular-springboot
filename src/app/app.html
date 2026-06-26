@@ -35,6 +35,15 @@
         </a>
         <a
           mat-list-item
+          routerLink="/partner-chat"
+          routerLinkActive="active-link"
+          (click)="closeDrawerOnMobile(drawer)"
+        >
+          <app-icon matListItemIcon name="chat" size="sm" />
+          <span matListItemTitle>Partner Chat</span>
+        </a>
+        <a
+          mat-list-item
           routerLink="/lucky-games"
           routerLinkActive="active-link"
           (click)="closeDrawerOnMobile(drawer)"
@@ -79,6 +88,14 @@
       <main class="content">
         <router-outlet />
       </main>
+
+      <footer class="app-footer">
+        <a routerLink="/privacy">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <a routerLink="/terms">Terms</a>
+        <span aria-hidden="true">·</span>
+        <span>18+ only</span>
+      </footer>
     </mat-sidenav-content>
   </mat-sidenav-container>
 } @else {

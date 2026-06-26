@@ -69,6 +69,27 @@
   padding: 1rem;
 }
 
+.app-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem 1.25rem;
+  color: var(--bb-text-muted);
+  font-size: 0.82rem;
+
+  a {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .welcome-text {
     display: none;

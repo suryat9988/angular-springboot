@@ -1,0 +1,111 @@
+<section class="partner-chat-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Private chat</p>
+      <h1>Partner Chat</h1>
+      <p>Connect with your partner and plan dates together in real time.</p>
+    </div>
+  </header>
+
+  @if (loadingProfile()) {
+    <mat-card class="loading-card">Setting up your chat profile...</mat-card>
+  } @else if (!isLinked()) {
+    <mat-card class="connect-card">
+      <h2>Connect with your partner</h2>
+      <p>Share your invite code, or enter your partner’s code to start chatting.</p>
+
+      @if (profile(); as userProfile) {
+        <div class="invite-block">
+          <span class="label">Your invite code</span>
+          <div class="invite-row">
+            <strong class="invite-code">{{ userProfile.inviteCode }}</strong>
+            <button mat-stroked-button type="button" (click)="copyInviteCode(userProfile.inviteCode)">
+              Copy code
+            </button>
+          </div>
+          <small>Your partner signs in with Gmail, opens Partner Chat, and enters this code.</small>
+        </div>
+
+        <div class="divider"><span>or</span></div>
+
+        <mat-form-field appearance="outline" class="code-field">
+          <mat-label>Partner invite code</mat-label>
+          <input
+            matInput
+            [ngModel]="partnerCode()"
+            (ngModelChange)="partnerCode.set(($event ?? '').toUpperCase())"
+            maxlength="6"
+            placeholder="ABC123"
+          />
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="connecting() || !partnerCode().trim()"
+          (click)="connectPartner()"
+        >
+          {{ connecting() ? 'Connecting...' : 'Connect partner' }}
+        </button>
+      }
+    </mat-card>
+  } @else if (profile(); as userProfile) {
+    <section class="chat-panel">
+      <header class="chat-header">
+        <div class="partner-meta">
+          <div class="partner-avatar">{{ (userProfile.partnerDisplayName ?? 'P').slice(0, 1) }}</div>
+          <div>
+            <h2>{{ userProfile.partnerDisplayName ?? 'Your partner' }}</h2>
+            <p>Connected • Gmail chat</p>
+          </div>
+        </div>
+        <button mat-button type="button" (click)="disconnectPartner()">Disconnect</button>
+      </header>
+
+      <div #messageList class="chat-messages" aria-live="polite">
+        @if (messages().length === 0) {
+          <p class="empty-chat">Say hi and start planning your next date together.</p>
+        }
+
+        @for (message of messages(); track message.id) {
+          <article
+            class="message"
+            [class.mine]="message.senderUid === currentUserId()"
+            [class.theirs]="message.senderUid !== currentUserId()"
+          >
+            <div class="bubble">
+              <p>{{ message.text }}</p>
+              <time>{{ message.createdAt | date: 'shortTime' }}</time>
+            </div>
+          </article>
+        }
+      </div>
+
+      <div class="chat-input">
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Message your partner</mat-label>
+          <textarea
+            matInput
+            rows="2"
+            [value]="draft()"
+            (input)="updateDraft($event)"
+            (keydown.enter)="onEnter($event)"
+            [disabled]="sending()"
+            placeholder="Dinner Friday? I found a rooftop spot..."
+          ></textarea>
+        </mat-form-field>
+        <button
+          mat-fab
+          color="primary"
+          type="button"
+          (click)="sendMessage()"
+          [disabled]="sending() || !draft().trim()"
+          aria-label="Send message"
+        >
+          <app-icon name="send" size="sm" />
+        </button>
+      </div>
+    </section>
+  }
+</section>

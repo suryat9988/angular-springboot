@@ -7,6 +7,9 @@ import { UpcomingDates } from './pages/upcoming-dates/upcoming-dates';
 import { Welcome } from './pages/welcome/welcome';
 import { BreakupDatePuzzle } from './pages/breakup-date-puzzle/breakup-date-puzzle';
 import { LuckyGames } from './pages/lucky-games/lucky-games';
+import { PartnerChat } from './pages/partner-chat/partner-chat';
+import { Privacy } from './pages/legal/privacy';
+import { Terms } from './pages/legal/terms';
 
 export const routes: Routes = [
   {
@@ -17,6 +20,14 @@ export const routes: Routes = [
   {
     path: 'login',
     component: Login
+  },
+  {
+    path: 'privacy',
+    component: Privacy
+  },
+  {
+    path: 'terms',
+    component: Terms
   },
   {
     path: 'welcome',
@@ -46,6 +57,11 @@ export const routes: Routes = [
   {
     path: 'upcoming-dates',
     component: UpcomingDates,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'partner-chat',
+    component: PartnerChat,
     canActivate: [authGuard]
   },
   {

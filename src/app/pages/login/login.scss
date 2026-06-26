@@ -153,3 +153,21 @@ h1 {
   font-size: 0.82rem;
   color: #6b6f86;
 }
+
+.legal-links {
+  margin: 0.85rem 0 0;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #6b6f86;
+
+  a {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
