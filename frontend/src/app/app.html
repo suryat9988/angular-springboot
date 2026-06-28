@@ -1,0 +1,23 @@
+<main class="container">
+  <h1>{{ title() }}</h1>
+  <p class="subtitle">Angular frontend talking to a Spring Boot backend.</p>
+
+  <div class="card">
+    <label for="name">Your name</label>
+    <input id="name" type="text" [(ngModel)]="name" placeholder="Enter a name" />
+    <button (click)="sayHello()" [disabled]="loading()">
+      {{ loading() ? 'Loading…' : 'Say hello' }}
+    </button>
+
+    @if (response(); as res) {
+      <div class="result success" data-testid="result">
+        <p class="message">{{ res.message }}</p>
+        <p class="timestamp">Server time: {{ res.timestamp }}</p>
+      </div>
+    }
+
+    @if (error(); as err) {
+      <div class="result error" data-testid="error">{{ err }}</div>
+    }
+  </div>
+</main>
